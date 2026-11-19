@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>By The Molecule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@300;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Barlow+Condensed:wght@300;600;700&family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&family=Archivo:wdth,wght@62..125,400..900&family=Figtree:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&display=swap">
+<style>
+html,body{margin:0;padding:0}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img{max-width:100%}
+/* Shared parts for the Arena and Studio website designs (components/site/kit.tsx).
+   Each design's root has class .sk and sets --p, --s, --ink, --mist, --line, --muted. */
+
+.sk{container-type:inline-size;position:relative;overflow:clip;font-family:'Figtree','Helvetica Neue',sans-serif;font-size:16px;line-height:1.55}
+.sk *{box-sizing:border-box}
+.sk :where(h1,h2,h3,p,blockquote,figure,ol,ul){margin:0}
+.sk :where(ol,ul){list-style:none;padding:0}
+.sk button{font-family:inherit}
+
+/* Images and stand-ins */
+.sk-img{display:block;width:100%;height:100%;object-fit:cover}
+.sk-ph{display:grid;place-items:center;background:repeating-linear-gradient(135deg,var(--ph-a,var(--mist)) 0 16px,var(--ph-b,color-mix(in srgb,var(--s) 22%,#fff)) 16px 32px)}
+.sk-ph span{font-size:13px;font-weight:600;background:#fff;color:#141414;padding:6px 12px;border-radius:999px;text-align:center;margin:0 10px}
+.sk-stars{color:#FFC64A;letter-spacing:2px}
+.sk-logo-img{height:30px;width:auto;max-width:170px;object-fit:contain;display:block}
+.sk-logo-text{font-family:var(--fd);font-stretch:var(--fs);font-weight:var(--fw);font-size:22px;letter-spacing:-.02em;white-space:nowrap}
+
+/* Marquees */
+.sk-marquee{overflow:hidden;display:flex}
+.sk-track{display:flex;flex:none;animation:sk-marq var(--dur,38s) linear infinite}
+.sk-track.rev{animation-direction:reverse}
+.sk-marquee:hover .sk-track{animation-play-state:paused}
+.sk-run{display:flex;flex:none;align-items:center}
+@keyframes sk-marq{to{transform:translateX(-50%)}}
+
+/* Phones whose screens scroll */
+.sk-phone{position:relative;aspect-ratio:9/19;border-radius:40px;background:#141418;padding:9px;box-shadow:0 30px 60px rgba(0,0,0,.28),inset 0 0 0 1.5px rgba(255,255,255,.16)}
+.sk-notch{position:absolute;top:17px;left:50%;transform:translateX(-50%);width:30%;height:16px;border-radius:999px;background:#000;z-index:2}
+.sk-screen{position:relative;width:100%;height:100%;border-radius:32px;overflow:hidden;background:#fff}
+.sk-scroll{position:absolute;left:0;top:0;width:100%;height:auto;animation:sk-screen var(--dur,16s) ease-in-out infinite alternate}
+.sk-phone:hover .sk-scroll{animation-play-state:paused}
+@keyframes sk-screen{0%,8%{top:0;transform:translateY(0)}92%,100%{top:100%;transform:translateY(-100%)}}
+.sk-mock{min-height:130%;background:linear-gradient(180deg,color-mix(in srgb,var(--s) 14%,#fff),#fff 40%);padding:46px 12px 12px;display:flex;flex-direction:column;gap:9px;color:#141414}
+.sk-mock-top{display:flex;justify-content:space-between;align-items:center;font-size:11px}
+.sk-mock-top span{width:22px;height:22px;border-radius:50%;background:#ececef}
+.sk-mock-ring{--n:70%;align-self:center;width:58%;aspect-ratio:1;border-radius:50%;background:conic-gradient(var(--p) var(--n),#ececef 0);display:grid;place-items:center;position:relative;margin:4px 0 6px}
+.sk-mock-ring::before{content:"";position:absolute;inset:11%;border-radius:50%;background:#fff}
+.sk-mock-ring b,.sk-mock-ring small{position:relative;grid-area:1/1}
+.sk-mock-ring b{font-size:17px;margin-top:-10px}
+.sk-mock-ring small{font-size:8.5px;margin-top:20px;opacity:.6}
+.sk-mock-card{display:flex;gap:8px;align-items:center;background:#fff;border-radius:12px;padding:9px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.sk-mock-card i{width:30px;height:30px;border-radius:9px;background:color-mix(in srgb,var(--s) 40%,#fff);flex:none}
+.sk-mock-card.hi{background:var(--p);color:#fff}
+.sk-mock-card.hi i{background:rgba(255,255,255,.3)}
+.sk-mock-card b{display:block;font-size:10.5px;line-height:1.2}
+.sk-mock-card small{font-size:9px;opacity:.65}
+
+/* Scroll reveal: only hides things once the script is running */
+.sk-armed .sk-rv{opacity:0;transform:translateY(34px);transition:opacity .8s ease,transform .9s cubic-bezier(.2,.8,.2,1)}
+.sk-armed .sk-rv.in{opacity:1;transform:none}
+.sk-armed .sk-rv.d1{transition-delay:.1s}
+.sk-armed .sk-rv.d2{transition-delay:.2s}
+.sk-armed .sk-rv.d3{transition-delay:.3s}
+
+@media (prefers-reduced-motion: reduce){
+  .sk *,.sk *::before,.sk *::after{animation:none!important;transition:none!important}
+}
+
+/* "Pulse" website design. Scoped under .pz and driven by brand variables:
+   --p primary, --s secondary, --ink text, --fd display face (+ --fs stretch, --fw weight, --tt case).
+   Responds to its own width (container queries) so it reflows in the dashboard's mobile preview. */
+
+.pz{
+  container-type:inline-size;container-name:pz;
+  --night:color-mix(in srgb,var(--p) 16%,#06060c);
+  --night-2:color-mix(in srgb,var(--p) 26%,#0a0a14);
+  --mist:color-mix(in srgb,var(--s) 12%,#fff);
+  --line:color-mix(in srgb,var(--ink) 11%,#fff);
+  --muted:color-mix(in srgb,var(--ink) 64%,#fff);
+  --on-p:#fff;
+  background:#fff;color:var(--ink);font-family:'Figtree','Helvetica Neue',sans-serif;font-size:16px;line-height:1.55;
+  position:relative;overflow:hidden;
+}
+.pz *{box-sizing:border-box}
+.pz :where(h1,h2,h3,p,blockquote,figure,ol){margin:0}
+.pz ol{list-style:none;padding:0}
+.pz-wrap{max-width:1220px;margin:0 auto;padding-inline:48px;position:relative}
+
+/* Type: the headline is the loudest thing on every section */
+.pz-h{font-family:var(--fd);font-stretch:var(--fs);font-weight:var(--fw);text-transform:var(--tt);line-height:.94;letter-spacing:-.02em;font-size:60px;text-wrap:balance}
+.pz-h span{display:block}
+.pz-h .pz-l2{padding-left:.55em}
+.pz-h1 .pz-l2,.pz-head-c .pz-h .pz-l2,.pz-final-join .pz-h .pz-l2{padding-left:0}
+.pz-h1{font-size:92px;letter-spacing:-.035em}
+.pz-h1 .pz-l1{opacity:1;color:var(--s)}
+.pz-night .pz-h .pz-l1{opacity:1;color:color-mix(in srgb,var(--s) 85%,#fff)}
+.pz-kicker{font-size:15px;font-weight:600;color:var(--p);margin-bottom:14px}
+.pz-p{font-size:16.5px;color:var(--muted);margin-top:16px;max-width:54ch}
+.pz-lead{font-size:19px;color:var(--ink);font-weight:500}
+.pz-sub{font-size:19px;line-height:1.5;margin-top:22px;max-width:46ch;opacity:.86}
+.pz-small{font-size:13.5px;margin-top:14px;opacity:.7}
+.pz-intro{font-size:17px;color:var(--muted);max-width:44ch}
+.pz-night .pz-intro{color:rgba(255,255,255,.72)}
+.pz-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px 48px;margin-bottom:48px}
+.pz-head-c{flex-direction:column;align-items:center;text-align:center}
+.pz-head-c .pz-intro{max-width:52ch}
+
+/* Buttons: a shine passes across on hover */
+.pz-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:16px 30px;font-weight:700;font-size:15.5px;background:var(--p);color:var(--on-p);border:2px solid var(--p);cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s;white-space:nowrap;font-family:inherit}
+.pz-btn::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);transition:transform .6s}
+.pz-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px color-mix(in srgb,var(--p) 45%,transparent)}
+.pz-btn:hover::after{transform:translateX(120%)}
+.pz-btn:focus-visible,.pz button:focus-visible{outline:3px solid var(--s);outline-offset:3px}
+.pz-btn-sm{padding:11px 20px;font-size:14px}
+.pz-btn-block{width:100%}
+.pz-btn-ghost{background:transparent;border-color:rgba(255,255,255,.4);color:#fff}
+.pz-btn-ghost:hover{border-color:#fff;box-shadow:none}
+.pz-btn-ghost-dark{background:transparent;border-color:var(--ink);color:var(--ink)}
+.pz-btn-ghost-dark:hover{background:var(--ink);color:#fff;box-shadow:none}
+button.pz-btn:disabled{opacity:.6}
+
+/* Images */
+.pz-img{display:block;width:100%;height:100%;object-fit:cover}
+.pz-ph{display:grid;place-items:center;background:repeating-linear-gradient(135deg,var(--mist) 0 16px,color-mix(in srgb,var(--s) 22%,#fff) 16px 32px)}
+.pz-ph span{font-size:13px;font-weight:600;background:#fff;color:var(--ink);padding:6px 12px;border-radius:999px}
+.pz-zoom{overflow:hidden;border-radius:28px}
+.pz-zoom .pz-img{transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.pz-zoom:hover .pz-img{transform:scale(1.05)}
+
+/* Offer bar and marquees */
+.pz-promo{background:var(--p);color:var(--on-p);font-size:13.5px;font-weight:600;padding:9px 0}
+.pz-promo-i{padding:0 28px;position:relative}
+.pz-promo-i::after{content:"";position:absolute;right:-3px;top:50%;width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.5}
+.pz-marquee{overflow:hidden;display:flex}
+.pz-track{display:flex;flex:none;animation:pz-marq 38s linear infinite}
+.pz-track.rev{animation-direction:reverse}
+.pz-marquee:hover .pz-track{animation-play-state:paused}
+.pz-run{display:flex;flex:none;align-items:center}
+@keyframes pz-marq{to{transform:translateX(-50%)}}
+
+/* Nav */
+.pz-nav{position:absolute;top:44px;left:50%;transform:translateX(-50%);z-index:5;width:min(1180px,calc(100% - 40px));display:flex;align-items:center;justify-content:space-between;gap:20px;padding:10px 10px 10px 24px;border-radius:999px;background:rgba(255,255,255,.08);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.14);color:#fff}
+.pz-logo{display:flex;align-items:center}
+.pz-logo-img{height:30px;width:auto;max-width:170px;object-fit:contain;display:block}
+.pz-nav .pz-logo-img{filter:brightness(0) invert(1)}
+.pz-logo-text{font-family:var(--fd);font-stretch:var(--fs);font-weight:var(--fw);font-size:21px;letter-spacing:-.02em}
+.pz-links{display:flex;gap:26px;font-size:14.5px;font-weight:500;opacity:.85}
+
+/* Night sections and the moving glow behind them */
+.pz-night{background:var(--night);color:#fff;position:relative;isolation:isolate}
+.pz-aurora{position:absolute;inset:0;z-index:-1;overflow:hidden}
+.pz-aurora i{position:absolute;width:62%;aspect-ratio:1;border-radius:50%;filter:blur(90px);opacity:.55;mix-blend-mode:screen}
+.pz-aurora i:nth-child(1){background:var(--p);left:-12%;top:-30%;animation:pz-drift-a 22s ease-in-out infinite alternate}
+.pz-aurora i:nth-child(2){background:var(--s);right:-18%;top:10%;opacity:.4;animation:pz-drift-b 26s ease-in-out infinite alternate}
+.pz-aurora i:nth-child(3){background:color-mix(in srgb,var(--p) 50%,var(--s));left:25%;bottom:-45%;opacity:.35;animation:pz-drift-c 30s ease-in-out infinite alternate}
+.pz-aurora-soft i{opacity:.28}
+.pz-aurora::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px);background-size:4px 4px;opacity:.5}
+@keyframes pz-drift-a{to{transform:translate(28%,22%) scale(1.25)}}
+@keyframes pz-drift-b{to{transform:translate(-30%,18%) scale(.85)}}
+@keyframes pz-drift-c{to{transform:translate(-22%,-30%) scale(1.2)}}
+
+/* Hero */
+.pz-hero{padding:170px 0 110px}
+.pz-hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.pz-proof{display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:600;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.1);margin-bottom:26px}
+.pz-stars{color:#FFC64A;letter-spacing:2px}
+.pz-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.pz-stores{display:flex;gap:10px;margin-top:26px}
+.pz-store{display:flex;flex-direction:column;padding:7px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.3);font-weight:700;font-size:15px;line-height:1.1;transition:background .2s}
+.pz-store small{font-size:10px;font-weight:500;opacity:.75}
+.pz-store:hover{background:rgba(255,255,255,.1)}
+.pz-hero-art{position:relative;min-height:600px}
+.pz-hero-photo{position:absolute;inset:6% 22% 0 4%;width:auto;height:auto;border-radius:220px 220px 28px 28px}
+.pz-hero-phones{position:absolute;inset:0}
+.pz-tilt-a{position:absolute;right:0;top:4%;width:46%;transform:rotate(6deg);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.pz-tilt-b{position:absolute;left:-4%;bottom:-4%;width:40%;transform:rotate(-8deg);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.pz-hero-art:hover .pz-tilt-a{transform:rotate(2deg) translateY(-10px)}
+.pz-hero-art:hover .pz-tilt-b{transform:rotate(-3deg) translateY(-8px)}
+
+/* Phones with scrolling screens */
+.pz-phone{position:relative;aspect-ratio:9/19;border-radius:38px;background:#16161c;padding:9px;box-shadow:0 30px 60px rgba(0,0,0,.45),inset 0 0 0 1.5px rgba(255,255,255,.18)}
+.pz-notch{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:30%;height:16px;border-radius:999px;background:#000;z-index:2}
+.pz-screen{position:relative;width:100%;height:100%;border-radius:30px;overflow:hidden;background:#fff}
+.pz-scroll{position:absolute;left:0;top:0;width:100%;height:auto;animation:pz-screen 16s ease-in-out infinite alternate}
+@keyframes pz-screen{0%,8%{top:0;transform:translateY(0)}92%,100%{top:100%;transform:translateY(-100%)}}
+.pz-mock{min-height:190%;background:linear-gradient(180deg,var(--mist),#fff 40%);padding:46px 12px 12px;display:flex;flex-direction:column;gap:9px;color:var(--ink)}
+.pz-mock-top{display:flex;justify-content:space-between;align-items:center;font-size:11px}
+.pz-mock-top span{width:22px;height:22px;border-radius:50%;background:var(--line)}
+.pz-mock-ring{--n:70%;align-self:center;width:58%;aspect-ratio:1;border-radius:50%;background:conic-gradient(var(--p) var(--n),var(--line) 0);display:grid;place-items:center;position:relative;margin:4px 0 6px}
+.pz-mock-ring::before{content:"";position:absolute;inset:11%;border-radius:50%;background:#fff}
+.pz-mock-ring b,.pz-mock-ring small{position:relative;grid-area:1/1}
+.pz-mock-ring b{font-size:17px;margin-top:-10px}
+.pz-mock-ring small{font-size:8.5px;margin-top:20px;color:var(--muted)}
+.pz-mock-card{display:flex;gap:8px;align-items:center;background:#fff;border-radius:12px;padding:9px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.pz-mock-card i{width:30px;height:30px;border-radius:9px;background:color-mix(in srgb,var(--s) 40%,#fff);flex:none}
+.pz-mock-card.hi{background:var(--p);color:#fff}
+.pz-mock-card.hi i{background:rgba(255,255,255,.3)}
+.pz-mock-card b{display:block;font-size:10.5px;line-height:1.2}
+.pz-mock-card small{font-size:9px;opacity:.65}
+
+/* Highlights band */
+.pz-band{background:var(--s);color:var(--ink);padding:22px 0;transform:rotate(-1.4deg) scale(1.03);margin:-14px 0 0;position:relative;z-index:2}
+.pz-band-i{font-family:var(--fd);font-stretch:var(--fs);font-weight:var(--fw);font-size:30px;letter-spacing:-.01em;text-transform:var(--tt);display:inline-flex;align-items:center;gap:30px;padding-right:30px;white-space:nowrap}
+.pz-band-i b{color:var(--p);font-size:22px}
+
+/* Numbers */
+.pz-stats{padding:70px 0 10px}
+.pz-stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:24px}
+.pz-stat{border-top:2px solid var(--ink);padding-top:16px}
+.pz-stat b{display:block;font-family:var(--fd);font-stretch:var(--fs);font-weight:var(--fw);font-size:52px;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.pz-stat > span{font-size:14.5px;color:var(--muted)}
+
+/* Sections */
+.pz-sec{padding:110px 0}
+.pz-split{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.pz-split .pz-btn{margin-top:30px}
+.pz-split-r > :first-child{order:0}
+.pz-about-img{aspect-ratio:4/5}
+
+/* Feature showcase */
+.pz-show{padding:120px 0}
+.pz-show-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+.pz-feats{display:flex;flex-direction:column;gap:6px}
+.pz-feat{width:100%;text-align:left;background:transparent;border:0;color:#fff;padding:18px 22px 20px;border-radius:20px;cursor:pointer;position:relative;display:flex;flex-direction:column;gap:6px;transition:background .3s;font-family:inherit}
+.pz-feat:hover{background:rgba(255,255,255,.05)}
+.pz-feat-t{font-family:var(--fd);font-stretch:var(--fs);font-weight:var(--fw);text-transform:var(--tt);font-size:26px;line-height:1.05;letter-spacing:-.015em;opacity:.45;transition:opacity .3s}
+.pz-feat-b{font-size:15.5px;color:rgba(255,255,255,.72);max-height:0;overflow:hidden;transition:max-height .45s ease,opacity .45s;opacity:0}
+.pz-feat.on{background:rgba(255,255,255,.08)}
+.pz-feat.on .pz-feat-t{opacity:1}
+.pz-feat.on .pz-feat-b{max-height:90px;opacity:1}
+.pz-feat-bar{position:absolute;left:22px;right:22px;bottom:0;height:2px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;opacity:0}
+.pz-feat.on .pz-feat-bar{opacity:1}
+.pz-feat.on .pz-feat-bar i{display:block;height:100%;background:var(--s);animation:pz-fill 4.2s linear forwards}
+@keyframes pz-fill{from{width:0}to{width:100%}}
+.pz-show-phone{position:relative;width:min(320px,100%);margin:0 auto;aspect-ratio:9/19}
+.pz-show-slide{position:absolute;inset:0;opacity:0;transform:translateY(24px) scale(.96);transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.pz-show-slide.on{opacity:1;transform:none}
+.pz-show-slide .pz-phone{box-shadow:0 40px 90px color-mix(in srgb,var(--p) 40%,transparent),inset 0 0 0 1.5px rgba(255,255,255,.18)}
+.pz-pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:56px;justify-content:center}
+.pz-pill{padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.22);font-size:14.5px;font-weight:600;transition:background .2s,color .2s,border-color .2s}
+.pz-pill:hover{background:var(--s);color:var(--ink);border-color:var(--s)}
+
+/* Programmes: a row you scroll sideways */
+.pz-progs{background:var(--mist)}
+.pz-prog-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(300px,1fr);gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
+.pz-prog{scroll-snap-align:start;background:#fff;border-radius:28px;overflow:hidden;position:relative;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.pz-prog:hover{transform:translateY(-8px);box-shadow:0 24px 50px color-mix(in srgb,var(--ink) 16%,transparent)}
+.pz-prog .pz-zoom{border-radius:0}
+.pz-prog-img{aspect-ratio:4/3}
+.pz-tag{position:absolute;top:16px;left:16px;background:var(--p);color:#fff;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px}
+.pz-prog-body{padding:22px 24px 24px}
+.pz-meta{font-size:13.5px;color:var(--muted);font-weight:600}
+.pz-prog h3{font-family:var(--fd);font-stretch:var(--fs);font-weight:var(--fw);text-transform:var(--tt);font-size:28px;line-height:1;margin:8px 0 10px}
+.pz-prog p{font-size:15px;color:var(--muted)}
+.pz-prog-foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px}
+.pz-prog-foot b{font-family:var(--fd);font-stretch:var(--fs);font-weight:var(--fw);font-size:28px}
+
+/* Results */
+.pz-results{padding-bottom:90px}
+.pz-story{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:18px;align-items:stretch;margin-bottom:46px}
+.pz-ba{position:relative;border-radius:24px;overflow:hidden;aspect-ratio:3/4}
+.pz-ba span{position:absolute;left:14px;bottom:14px;background:rgba(0,0,0,.6);color:#fff;font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:999px}
+.pz-ba:last-of-type span{background:var(--p)}
+.pz-story-q{background:var(--night);color:#fff;border-radius:24px;padding:34px;display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.pz-story-q p{font-family:var(--fd);font-stretch:var(--fs);font-weight:var(--fw);font-size:28px;line-height:1.12;letter-spacing:-.015em}
+.pz-story-q cite{font-style:normal;font-size:14.5px;opacity:.75}
+.pz-reviews .pz-run{gap:18px;padding-right:18px}
+.pz-review{width:360px;flex:none;background:#fff;border:1px solid var(--line);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:12px;transition:transform .3s,border-color .3s}
+.pz-review:hover{transform:translateY(-4px) rotate(-.6deg);border-color:var(--p)}
+.pz-review blockquote{font-size:16.5px;line-height:1.5}
+.pz-review figcaption{font-size:13.5px;color:var(--muted);font-weight:600}
+
+/* Coach */
+.pz-coach{background:var(--mist)}
+.pz-coach-art{position:relative}
+.pz-coach-img{aspect-ratio:4/5}
+.pz-badge{position:absolute;right:-14px;bottom:28px;background:var(--p);color:#fff;font-weight:700;font-size:14px;padding:12px 18px;border-radius:16px;transform:rotate(-4deg);box-shadow:0 14px 30px color-mix(in srgb,var(--p) 40%,transparent);max-width:70%}
+.pz-coach .pz-btn{margin-top:26px}
+
+/* Pricing */
+.pz-plans{display:grid;gap:22px;align-items:stretch}
+.pz-plans.n1{grid-template-columns:minmax(0,420px);justify-content:center}
+.pz-plans.n2{grid-template-columns:repeat(2,minmax(0,1fr));max-width:860px;margin:0 auto}
+.pz-plans.n3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pz-plan{position:relative;border:1.5px solid var(--line);border-radius:28px;padding:34px 30px 30px;display:flex;flex-direction:column;gap:6px;background:#fff;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.pz-plan:hover{transform:translateY(-6px);box-shadow:0 22px 50px color-mix(in srgb,var(--ink) 12%,transparent)}
+.pz-plan.pop{background:var(--night);color:#fff;border-color:transparent;isolation:isolate}
+.pz-plan.pop::before{content:"";position:absolute;inset:-2px;border-radius:30px;z-index:-1;background:conic-gradient(from var(--pz-a,0deg),var(--p),var(--s),var(--p));animation:pz-spin 6s linear infinite}
+.pz-plan.pop::after{content:"";position:absolute;inset:0;border-radius:28px;background:var(--night);z-index:-1}
+@property --pz-a{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes pz-spin{to{--pz-a:360deg}}
+.pz-plan-tag{position:absolute;top:-14px;left:30px;background:var(--s);color:var(--ink);font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px}
+.pz-plan-name{font-weight:700;font-size:16px}
+.pz-price{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pz-price b{font-family:var(--fd);font-stretch:var(--fs);font-weight:var(--fw);font-size:54px;line-height:1;letter-spacing:-.03em}
+.pz-price span{font-size:14px;opacity:.7}
+.pz-perday{font-size:14px;font-weight:600;color:var(--p)}
+.pz-plan.pop .pz-perday{color:var(--s)}
+.pz-plan .pz-btn{margin-top:18px}
+.pz-plan.pop .pz-btn-ghost-dark{border-color:#fff;color:#fff}
+.pz-plan-inc{font-size:13.5px;opacity:.72;margin-top:10px}
+.pz-plans-todo .pz-plan{border-style:dashed;background:var(--mist)}
+.pz-trust{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 28px;margin-top:30px;font-size:14.5px;font-weight:600;color:var(--muted)}
+
+/* FAQ */
+.pz-faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:64px;align-items:start}
+.pz-q{border-bottom:1px solid var(--line)}
+.pz-q button{width:100%;display:flex;justify-content:space-between;gap:20px;align-items:center;background:none;border:0;padding:22px 0;text-align:left;font:600 18px/1.35 inherit;color:var(--ink);cursor:pointer}
+.pz-q i{flex:none;width:30px;height:30px;border-radius:50%;background:var(--mist);position:relative;transition:background .25s,transform .35s}
+.pz-q i::before,.pz-q i::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:2px;background:var(--ink);transform:translate(-50%,-50%)}
+.pz-q i::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .35s}
+.pz-q.open i{background:var(--p);transform:rotate(180deg)}
+.pz-q.open i::before,.pz-q.open i::after{background:#fff}
+.pz-q.open i::after{transform:translate(-50%,-50%) rotate(0)}
+.pz-q button:hover i{background:color-mix(in srgb,var(--p) 25%,#fff)}
+.pz-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s ease}
+.pz-a p{overflow:hidden;color:var(--muted);font-size:16px}
+.pz-q.open .pz-a{grid-template-rows:1fr}
+.pz-q.open .pz-a p{padding-bottom:22px}
+
+/* Closing */
+.pz-final{padding:120px 0 0;overflow:hidden}
+.pz-final-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.pz-final-join{grid-column:1/-1;text-align:center;display:flex;flex-direction:column;align-items:center}
+.pz-final-join .pz-btn{margin-top:28px}
+.pz-capture{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(12px);border-radius:28px;padding:30px}
+.pz-capture label{font-weight:600;font-size:14px}
+.pz-capture-row{display:flex;gap:8px;margin-top:10px;background:#fff;border-radius:999px;padding:6px}
+.pz-capture-row input{flex:1;min-width:0;border:0;background:transparent;padding:0 16px;font:16px inherit;color:var(--ink)}
+.pz-capture-row input:focus{outline:none}
+.pz-capture-row:focus-within{box-shadow:0 0 0 3px var(--s)}
+.pz-thanks{font-size:18px;font-weight:600}
+.pz-word{font-family:var(--fd);font-stretch:var(--fs);font-weight:var(--fw);text-transform:var(--tt);line-height:.82;letter-spacing:-.04em;white-space:nowrap;text-align:center;margin-top:90px;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.28);transition:color .6s}
+.pz-final:hover .pz-word{color:rgba(255,255,255,.08)}
+
+/* Footer */
+.pz-foot{background:var(--night-2);color:rgba(255,255,255,.8);padding:44px 0 26px;font-size:14.5px}
+.pz-foot-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px}
+.pz-foot .pz-logo{color:#fff}
+.pz-foot .pz-logo-img{filter:brightness(0) invert(1)}
+.pz-foot-brand p{margin-top:10px;max-width:36ch}
+.pz-foot-links{display:flex;flex-wrap:wrap;gap:12px 26px}
+.pz-foot-links span{transition:color .2s}
+.pz-foot-links span:hover{color:#fff}
+.pz-legal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:30px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);font-size:13px;opacity:.7}
+
+/* Respect people who've asked for less motion */
+@media (prefers-reduced-motion: reduce){
+  .pz *,.pz *::before,.pz *::after{animation:none!important;transition:none!important}
+}
+
+/* Tablet */
+@container pz (max-width: 1000px){
+  .pz-wrap{padding-inline:30px}
+  .pz-links{display:none}
+  .pz-h{font-size:46px}
+  .pz-h1{font-size:66px}
+  .pz-hero-grid,.pz-show-grid,.pz-split,.pz-faq-grid,.pz-final-grid{grid-template-columns:1fr;gap:44px}
+  .pz-hero-art{min-height:520px}
+  .pz-plans.n3{grid-template-columns:1fr;max-width:460px;margin:0 auto}
+  .pz-story{grid-template-columns:1fr 1fr}
+  .pz-story-q{grid-column:1/-1}
+}
+
+/* Phone */
+@container pz (max-width: 640px){
+  .pz-wrap{padding-inline:20px}
+  .pz-h .pz-l2{padding-left:0}
+  .pz-nav{top:40px;padding:8px 8px 8px 16px;width:calc(100% - 24px)}
+  .pz-nav .pz-btn-sm{padding:9px 14px;font-size:13px}
+  .pz-hero{padding:130px 0 70px}
+  .pz-h{font-size:38px}
+  .pz-h1{font-size:50px}
+  .pz-sub{font-size:17px}
+  .pz-hero-art{min-height:440px}
+  .pz-hero-photo{inset:0 18% 8% 0}
+  .pz-stores{flex-wrap:wrap}
+  .pz-sec{padding:72px 0}
+  .pz-show{padding:80px 0}
+  .pz-feat-t{font-size:22px}
+  .pz-stat b{font-size:34px}
+  .pz-stats-row{grid-template-columns:1fr 1fr;gap:18px}
+  .pz-band-i{font-size:22px}
+  .pz-review{width:290px}
+  .pz-plans.n2{grid-template-columns:1fr}
+  .pz-badge{right:10px}
+  .pz-capture-row{flex-direction:column;border-radius:20px}
+  .pz-capture-row input{padding:12px}
+  .pz-final{padding-top:80px}
+}
+
+</style>
+</head>
+<body>
+<div class="site pz" style="--p:#5BB6F0;--s:#FBDD8A;--ink:#141414;--fd:&#x27;Archivo&#x27;, &#x27;Arial Black&#x27;, sans-serif;--fs:118%;--fw:900;--tt:none"><div class="pz-promo"><div class="pz-marquee "><div class="pz-track"><div class="pz-run"><span class="pz-promo-i">6 features in one app</span><span class="pz-promo-i">3–5 days a week</span><span class="pz-promo-i">30 min sessions</span><span class="pz-promo-i">gym or home plans</span><span class="pz-promo-i">7 days free</span></div><div class="pz-run" aria-hidden="true"><span class="pz-promo-i">6 features in one app</span><span class="pz-promo-i">3–5 days a week</span><span class="pz-promo-i">30 min sessions</span><span class="pz-promo-i">gym or home plans</span><span class="pz-promo-i">7 days free</span></div></div></div></div><nav class="pz-nav" aria-label="By The Molecule menu"><span class="pz-logo"><span class="pz-logo-text">By The Molecule</span></span><div class="pz-links"><span>What&#x27;s inside</span><span>Pricing</span><span>FAQ</span></div><span class="pz-btn pz-btn-sm">Start free trial</span></nav><section class="pz-hero pz-night"><div class="pz-aurora" aria-hidden="true"><i></i><i></i><i></i></div><div class="pz-wrap pz-hero-grid"><div class="pz-hero-copy"><h1 class="pz-h pz-h1"><span class="pz-l1">Your strongest</span><span class="pz-l2">self starts here.</span></h1><p class="pz-sub">By The Molecule brings your training, food and accountability into one place. Your first 7 days are free.</p><div class="pz-ctas"><span class="pz-btn">Start free trial</span><span class="pz-btn pz-btn-ghost">See what&#x27;s inside</span></div><p class="pz-small">7 days free · Cancel anytime</p><div class="pz-stores" aria-label="Available on iPhone and Android"><span class="pz-store"><small>Download on the</small>App Store</span><span class="pz-store"><small>Get it on</small>Google Play</span></div></div><div class="pz-hero-art"><div class="pz-img pz-ph pz-hero-photo" role="img" aria-label="Hero photo of the coach (to be added)"><span>Hero photo of the coach</span></div><div class="pz-hero-phones"><div class="pz-tilt-a"><div class="pz-phone"><div class="pz-notch" aria-hidden="true"></div><div class="pz-screen"><div class="pz-scroll pz-mock" role="img" aria-label="App screen (screenshot to be added)"><div class="pz-mock-top"><span></span><b>Today</b><span></span></div><div class="pz-mock-ring" style="--n:62%"><b>62%</b><small>this week</small></div><div class="pz-mock-card hi"><i></i><div><b>Workout plans</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Meal plans</b><small>Day 3</small></div></div><div class="pz-mock-card"><i></i><div><b>Weekly check-ins</b><small>Ready</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Habit tracking</b><small>4 of 6</small></div></div><div class="pz-mock-card"><i></i><div><b>Community group</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Progress photos</b><small>Day 3</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Workout plans</b><small>Ready</small></div></div><div class="pz-mock-card"><i></i><div><b>Meal plans</b><small>4 of 6</small></div></div></div></div></div></div><div class="pz-tilt-b"><div class="pz-phone"><div class="pz-notch" aria-hidden="true"></div><div class="pz-screen"><div class="pz-scroll pz-mock" role="img" aria-label="App screen (screenshot to be added)"><div class="pz-mock-top"><span></span><b>Today</b><span></span></div><div class="pz-mock-ring" style="--n:80%"><b>80%</b><small>this week</small></div><div class="pz-mock-card hi"><i></i><div><b>Progress photos</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Community group</b><small>Day 3</small></div></div><div class="pz-mock-card"><i></i><div><b>Habit tracking</b><small>Ready</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Weekly check-ins</b><small>4 of 6</small></div></div><div class="pz-mock-card"><i></i><div><b>Meal plans</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Workout plans</b><small>Day 3</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Progress photos</b><small>Ready</small></div></div><div class="pz-mock-card"><i></i><div><b>Community group</b><small>4 of 6</small></div></div></div></div></div></div></div></div></div></section><div class="pz-marquee pz-band"><div class="pz-track"><div class="pz-run"><span class="pz-band-i">6 features in one app<b aria-hidden="true">✦</b></span><span class="pz-band-i">3–5 days a week<b aria-hidden="true">✦</b></span><span class="pz-band-i">30 min sessions<b aria-hidden="true">✦</b></span><span class="pz-band-i">gym or home plans<b aria-hidden="true">✦</b></span><span class="pz-band-i">7 days free<b aria-hidden="true">✦</b></span></div><div class="pz-run" aria-hidden="true"><span class="pz-band-i">6 features in one app<b aria-hidden="true">✦</b></span><span class="pz-band-i">3–5 days a week<b aria-hidden="true">✦</b></span><span class="pz-band-i">30 min sessions<b aria-hidden="true">✦</b></span><span class="pz-band-i">gym or home plans<b aria-hidden="true">✦</b></span><span class="pz-band-i">7 days free<b aria-hidden="true">✦</b></span></div></div></div><section class="pz-stats" aria-label="At a glance"><div class="pz-wrap pz-stats-row"><div class="pz-stat"><b><span data-count="30 min">30 min</span></b><span>Session length</span></div><div class="pz-stat"><b><span data-count="3–5">3–5</span></b><span>Days a week</span></div><div class="pz-stat"><b><span data-count="Gym + home">Gym + home</span></b><span>Every plan</span></div></div></section><section id="about" class="pz-sec pz-about"><div class="pz-wrap pz-split"><div><p class="pz-kicker">What By The Molecule is</p><h2 class="pz-h "><span class="pz-l1">Your training and</span><span class="pz-l2">nutrition, together</span></h2><p class="pz-p pz-lead">By The Molecule is built for estheticians and skin specialists who want to deliver better results, grow their clinic and feel more confident in their skin science knowledge. Jade writes the plans and you follow them, one session at a time.</p><p class="pz-p">No spreadsheets, no second tracking app, no starting again every Monday. Just a plan that fits your week and keeps moving.</p><span class="pz-btn">Start free trial</span></div><div class="pz-zoom"><div class="pz-img pz-ph pz-about-img" role="img" aria-label="Photo for the intro section (to be added)"><span>Photo for the intro section</span></div></div></div></section><section id="inside" class="pz-sec pz-show pz-night" data-cycle="4200"><div class="pz-aurora pz-aurora-soft" aria-hidden="true"><i></i><i></i></div><div class="pz-wrap"><div class="pz-head"><h2 class="pz-h "><span class="pz-l1">Everything.</span><span class="pz-l2">One price.</span></h2><p class="pz-intro">6 things you get from day one. Nothing is locked behind a higher tier.</p></div><div class="pz-show-grid"><ol class="pz-feats"><li><button type="button" data-ci="0" class="pz-feat on" aria-pressed="true"><span class="pz-feat-t">Workout plans</span><span class="pz-feat-b">Structured gym or home sessions, 3–5 days a week, that progress as you do.</span><span class="pz-feat-bar" aria-hidden="true"><i></i></span></button></li><li><button type="button" data-ci="1" class="pz-feat" aria-pressed="false"><span class="pz-feat-t">Meal plans</span><span class="pz-feat-b">Simple meals with targets set for you. Nothing banned, nothing weighed in shame.</span><span class="pz-feat-bar" aria-hidden="true"><i></i></span></button></li><li><button type="button" data-ci="2" class="pz-feat" aria-pressed="false"><span class="pz-feat-t">Weekly check-ins</span><span class="pz-feat-b">Jade checks in every week, so you are never doing it on your own.</span><span class="pz-feat-bar" aria-hidden="true"><i></i></span></button></li><li><button type="button" data-ci="3" class="pz-feat" aria-pressed="false"><span class="pz-feat-t">Habit tracking</span><span class="pz-feat-b">Water, steps and sleep in one place, with streaks that keep you going.</span><span class="pz-feat-bar" aria-hidden="true"><i></i></span></button></li><li><button type="button" data-ci="4" class="pz-feat" aria-pressed="false"><span class="pz-feat-t">Community group</span><span class="pz-feat-b">A private group of people on the same plans, cheering each other on.</span><span class="pz-feat-bar" aria-hidden="true"><i></i></span></button></li><li><button type="button" data-ci="5" class="pz-feat" aria-pressed="false"><span class="pz-feat-t">Progress photos</span><span class="pz-feat-b">See the change week by week, even when the scales are being stubborn.</span><span class="pz-feat-bar" aria-hidden="true"><i></i></span></button></li></ol><div class="pz-show-phone"><div data-cs="0" class="pz-show-slide on" aria-hidden="false"><div class="pz-phone"><div class="pz-notch" aria-hidden="true"></div><div class="pz-screen"><div class="pz-scroll pz-mock" role="img" aria-label="Workout plans in the app (screenshot to be added)"><div class="pz-mock-top"><span></span><b>Today</b><span></span></div><div class="pz-mock-ring" style="--n:62%"><b>62%</b><small>this week</small></div><div class="pz-mock-card hi"><i></i><div><b>Workout plans</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Meal plans</b><small>Day 3</small></div></div><div class="pz-mock-card"><i></i><div><b>Weekly check-ins</b><small>Ready</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Habit tracking</b><small>4 of 6</small></div></div><div class="pz-mock-card"><i></i><div><b>Community group</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Progress photos</b><small>Day 3</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Workout plans</b><small>Ready</small></div></div><div class="pz-mock-card"><i></i><div><b>Meal plans</b><small>4 of 6</small></div></div></div></div></div></div><div data-cs="1" class="pz-show-slide" aria-hidden="true"><div class="pz-phone"><div class="pz-notch" aria-hidden="true"></div><div class="pz-screen"><div class="pz-scroll pz-mock" role="img" aria-label="Meal plans in the app (screenshot to be added)"><div class="pz-mock-top"><span></span><b>Today</b><span></span></div><div class="pz-mock-ring" style="--n:71%"><b>71%</b><small>this week</small></div><div class="pz-mock-card hi"><i></i><div><b>Meal plans</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Workout plans</b><small>Day 3</small></div></div><div class="pz-mock-card"><i></i><div><b>Weekly check-ins</b><small>Ready</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Habit tracking</b><small>4 of 6</small></div></div><div class="pz-mock-card"><i></i><div><b>Community group</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Progress photos</b><small>Day 3</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Meal plans</b><small>Ready</small></div></div><div class="pz-mock-card"><i></i><div><b>Workout plans</b><small>4 of 6</small></div></div></div></div></div></div><div data-cs="2" class="pz-show-slide" aria-hidden="true"><div class="pz-phone"><div class="pz-notch" aria-hidden="true"></div><div class="pz-screen"><div class="pz-scroll pz-mock" role="img" aria-label="Weekly check-ins in the app (screenshot to be added)"><div class="pz-mock-top"><span></span><b>Today</b><span></span></div><div class="pz-mock-ring" style="--n:80%"><b>80%</b><small>this week</small></div><div class="pz-mock-card hi"><i></i><div><b>Weekly check-ins</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Workout plans</b><small>Day 3</small></div></div><div class="pz-mock-card"><i></i><div><b>Meal plans</b><small>Ready</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Habit tracking</b><small>4 of 6</small></div></div><div class="pz-mock-card"><i></i><div><b>Community group</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Progress photos</b><small>Day 3</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Weekly check-ins</b><small>Ready</small></div></div><div class="pz-mock-card"><i></i><div><b>Workout plans</b><small>4 of 6</small></div></div></div></div></div></div><div data-cs="3" class="pz-show-slide" aria-hidden="true"><div class="pz-phone"><div class="pz-notch" aria-hidden="true"></div><div class="pz-screen"><div class="pz-scroll pz-mock" role="img" aria-label="Habit tracking in the app (screenshot to be added)"><div class="pz-mock-top"><span></span><b>Today</b><span></span></div><div class="pz-mock-ring" style="--n:89%"><b>89%</b><small>this week</small></div><div class="pz-mock-card hi"><i></i><div><b>Habit tracking</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Workout plans</b><small>Day 3</small></div></div><div class="pz-mock-card"><i></i><div><b>Meal plans</b><small>Ready</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Weekly check-ins</b><small>4 of 6</small></div></div><div class="pz-mock-card"><i></i><div><b>Community group</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Progress photos</b><small>Day 3</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Habit tracking</b><small>Ready</small></div></div><div class="pz-mock-card"><i></i><div><b>Workout plans</b><small>4 of 6</small></div></div></div></div></div></div><div data-cs="4" class="pz-show-slide" aria-hidden="true"><div class="pz-phone"><div class="pz-notch" aria-hidden="true"></div><div class="pz-screen"><div class="pz-scroll pz-mock" role="img" aria-label="Community group in the app (screenshot to be added)"><div class="pz-mock-top"><span></span><b>Today</b><span></span></div><div class="pz-mock-ring" style="--n:62%"><b>62%</b><small>this week</small></div><div class="pz-mock-card hi"><i></i><div><b>Community group</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Workout plans</b><small>Day 3</small></div></div><div class="pz-mock-card"><i></i><div><b>Meal plans</b><small>Ready</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Weekly check-ins</b><small>4 of 6</small></div></div><div class="pz-mock-card"><i></i><div><b>Habit tracking</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Progress photos</b><small>Day 3</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Community group</b><small>Ready</small></div></div><div class="pz-mock-card"><i></i><div><b>Workout plans</b><small>4 of 6</small></div></div></div></div></div></div><div data-cs="5" class="pz-show-slide" aria-hidden="true"><div class="pz-phone"><div class="pz-notch" aria-hidden="true"></div><div class="pz-screen"><div class="pz-scroll pz-mock" role="img" aria-label="Progress photos in the app (screenshot to be added)"><div class="pz-mock-top"><span></span><b>Today</b><span></span></div><div class="pz-mock-ring" style="--n:71%"><b>71%</b><small>this week</small></div><div class="pz-mock-card hi"><i></i><div><b>Progress photos</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Workout plans</b><small>Day 3</small></div></div><div class="pz-mock-card"><i></i><div><b>Meal plans</b><small>Ready</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Weekly check-ins</b><small>4 of 6</small></div></div><div class="pz-mock-card"><i></i><div><b>Habit tracking</b><small>20 min</small></div></div><div class="pz-mock-card"><i></i><div><b>Community group</b><small>Day 3</small></div></div><div class="pz-mock-card hi"><i></i><div><b>Progress photos</b><small>Ready</small></div></div><div class="pz-mock-card"><i></i><div><b>Workout plans</b><small>4 of 6</small></div></div></div></div></div></div></div></div></div></section><section id="coach" class="pz-sec pz-coach"><div class="pz-wrap pz-split pz-split-r"><div class="pz-coach-art"><div class="pz-zoom"><div class="pz-img pz-ph pz-coach-img" role="img" aria-label="Photo of the coach (to be added)"><span>Photo of the coach</span></div></div></div><div><p class="pz-kicker">Meet Jade</p><h2 class="pz-h "><span class="pz-l1">I built this for</span><span class="pz-l2">people like you</span></h2><p class="pz-p pz-lead">I&#x27;m Jade, and I built By The Molecule to make training simple enough to stick with.</p><p class="pz-p">Today I write every plan in By The Molecule and check in with members every week.</p></div></div></section><section id="pricing" class="pz-sec pz-pricing"><div class="pz-wrap"><div class="pz-head pz-head-c"><h2 class="pz-h "><span class="pz-l1">If you&#x27;re waiting for a sign,</span><span class="pz-l2">this is it</span></h2><p class="pz-intro">Same everything on every plan. The longer you commit, the less you pay. The first 7 days are free on every plan.</p></div><div class="pz-plans n3 pz-plans-todo" role="note"><div class="pz-plan"><p class="pz-plan-name">Monthly</p><p class="pz-price"><b>£–</b></p><p class="pz-plan-inc">Pricing is added in the REPS launch setup</p></div><div class="pz-plan"><p class="pz-plan-name">Quarterly</p><p class="pz-price"><b>£–</b></p><p class="pz-plan-inc">Pricing is added in the REPS launch setup</p></div><div class="pz-plan"><p class="pz-plan-name">Annual</p><p class="pz-price"><b>£–</b></p><p class="pz-plan-inc">Pricing is added in the REPS launch setup</p></div></div><div class="pz-trust"><span>✓ 7 days free on every plan</span><span>✓ Cancel anytime</span><span>✓ iOS &amp; Android</span></div></div></section><section id="faq" class="pz-sec pz-faq"><div class="pz-wrap pz-faq-grid"><div><h2 class="pz-h "><span class="pz-l1">Everything</span><span class="pz-l2">you&#x27;d ask</span></h2></div><div class="pz-faq-list"><div data-faq="" class="pz-q open"><button type="button" aria-expanded="true"><span>What do I get with By The Molecule?</span><i aria-hidden="true"></i></button><div class="pz-a"><p>Workout plans, Meal plans, Weekly check-ins, Habit tracking, Community group, all in one place.</p></div></div><div data-faq="" class="pz-q"><button type="button" aria-expanded="false"><span>How does the 7 day free trial work?</span><i aria-hidden="true"></i></button><div class="pz-a"><p>Start any plan and the first 7 days are free. Cancel before then and you pay nothing.</p></div></div><div data-faq="" class="pz-q"><button type="button" aria-expanded="false"><span>Can I cancel whenever I want?</span><i aria-hidden="true"></i></button><div class="pz-a"><p>Yes. Cancel in a couple of taps, with no emails or phone calls needed.</p></div></div><div data-faq="" class="pz-q"><button type="button" aria-expanded="false"><span>I&#x27;m a complete beginner. Is this for me?</span><i aria-hidden="true"></i></button><div class="pz-a"><p>Yes. Every exercise has guidance and the plans start where you are.</p></div></div><div data-faq="" class="pz-q"><button type="button" aria-expanded="false"><span>Do I need a gym membership?</span><i aria-hidden="true"></i></button><div class="pz-a"><p>No. There are home plans that need little or no equipment.</p></div></div><div data-faq="" class="pz-q"><button type="button" aria-expanded="false"><span>How much time do I need each week?</span><i aria-hidden="true"></i></button><div class="pz-a"><p>Plan for 3–5 sessions a week of around 30 min.</p></div></div><div data-faq="" class="pz-q"><button type="button" aria-expanded="false"><span>What if I get stuck?</span><i aria-hidden="true"></i></button><div class="pz-a"><p>Message Jade and you&#x27;ll get an answer quickly.</p></div></div></div></div></section><section id="guide" class="pz-final pz-night"><div class="pz-aurora" aria-hidden="true"><i></i><i></i><i></i></div><div class="pz-wrap pz-final-grid"><div class="pz-final-join"><h2 class="pz-h "><span class="pz-l1">Your strongest</span><span class="pz-l2">self starts here.</span></h2><p class="pz-sub">7 days free · Cancel anytime</p><span class="pz-btn">Start free trial</span></div></div><div class="pz-word" aria-hidden="true" style="font-size:8.0cqi">By The Molecule</div></section><footer class="pz-foot"><div class="pz-wrap pz-foot-row"><div class="pz-foot-brand"><span class="pz-logo"><span class="pz-logo-text">By The Molecule</span></span><p>By The Molecule. Written and coached by Jade.</p></div><div class="pz-foot-links"><span>What&#x27;s inside</span><span>Pricing</span><span>FAQ</span><span>Member login</span></div></div><div class="pz-wrap pz-legal"><span>© 2026 By The Molecule</span><span>Terms · Privacy · Cookies</span></div></footer></div>
+<script>
+/* Makes an exported website page work on its own, without React: scroll reveals, counting
+   numbers, the feature showcase, FAQ, before and after slider, countdown and the forms.
+   Added to the end of every page the dashboard saves as HTML. */
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canWatch = 'IntersectionObserver' in window;
+  var all = function (sel, root) { return [].slice.call((root || document).querySelectorAll(sel)); };
+
+  // Sections fade in as they scroll into view.
+  all('.sk').forEach(function (root) {
+    if (reduce || !canWatch) return;
+    root.classList.add('sk-armed');
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    all('.sk-rv', root).forEach(function (el) { io.observe(el); });
+  });
+
+  // "2,000+" counts up the first time it's seen.
+  all('[data-count]').forEach(function (el) {
+    var m = (el.getAttribute('data-count') || '').match(/^([^\d]*)([\d,.]+)(.*)$/);
+    if (!m || reduce || !canWatch) return;
+    var target = parseFloat(m[2].replace(/,/g, '')), dec = (m[2].split('.')[1] || '').length;
+    var io = new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting) return;
+      io.disconnect();
+      var t0 = performance.now();
+      (function tick(now) {
+        var k = Math.min(1, (now - t0) / 1400);
+        el.textContent = m[1] + (target * (1 - Math.pow(1 - k, 3))).toLocaleString('en-GB', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + m[3];
+        if (k < 1) requestAnimationFrame(tick);
+      })(t0);
+    }, { threshold: 0.4 });
+    io.observe(el);
+  });
+
+  // Feature showcases step through on a timer; hovering or clicking one holds it.
+  all('[data-cycle]').forEach(function (sec) {
+    var by = function (a) { return function (x, y) { return +x.getAttribute(a) - +y.getAttribute(a); }; };
+    var items = all('[data-ci]', sec).sort(by('data-ci')), slides = all('[data-cs]', sec).sort(by('data-cs'));
+    if (!items.length) return;
+    var ms = +sec.getAttribute('data-cycle') || 4200, at = 0, held = false, timer;
+    function show(n) {
+      at = n;
+      items.forEach(function (el, k) {
+        var on = k === n;
+        el.classList.toggle('on', on);
+        if (el.hasAttribute('aria-pressed')) el.setAttribute('aria-pressed', on);
+        if (el.hasAttribute('aria-expanded')) el.setAttribute('aria-expanded', on);
+        var bar = el.querySelector('[class$="-bar"] i');
+        if (bar && on) { bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = ''; }
+      });
+      slides.forEach(function (el, k) { el.classList.toggle('on', k === n); el.setAttribute('aria-hidden', k !== n); });
+    }
+    function run() { clearInterval(timer); if (!reduce && !held && items.length > 1) timer = setInterval(function () { show((at + 1) % items.length); }, ms); }
+    items.forEach(function (el, k) {
+      var pick = function () { held = true; clearInterval(timer); show(k); };
+      el.addEventListener('mouseenter', pick); el.addEventListener('focus', pick); el.addEventListener('click', pick);
+    });
+    sec.addEventListener('mouseleave', function () { held = false; run(); });
+    run();
+  });
+
+  // FAQ: one answer open at a time.
+  all('[data-faq]').forEach(function (q) {
+    var b = q.querySelector('button');
+    if (!b) return;
+    b.addEventListener('click', function () {
+      var open = !q.classList.contains('open');
+      all('[data-faq]', q.parentNode).forEach(function (o) { o.classList.remove('open'); var ob = o.querySelector('button'); if (ob) ob.setAttribute('aria-expanded', 'false'); });
+      if (open) { q.classList.add('open'); b.setAttribute('aria-expanded', 'true'); }
+    });
+  });
+
+  // Drag to compare before and after.
+  all('[data-compare]').forEach(function (c) {
+    var r = c.querySelector('input[type=range]');
+    if (r) r.addEventListener('input', function () { c.style.setProperty('--at', r.value + '%'); });
+  });
+
+  // A soft light that follows the pointer across cards.
+  all('[data-spot]').forEach(function (el) {
+    el.addEventListener('mousemove', function (e) {
+      var b = el.getBoundingClientRect();
+      el.style.setProperty('--mx', ((e.clientX - b.left) / Math.max(b.width, 1)) * 100 + '%');
+      el.style.setProperty('--my', ((e.clientY - b.top) / Math.max(b.height, 1)) * 100 + '%');
+    });
+  });
+
+  // Days, hours and minutes until 8am on launch day.
+  all('[data-countdown]').forEach(function (el) {
+    var m = (el.getAttribute('data-countdown') || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (!m) return;
+    var at = new Date(+m[1], +m[2] - 1, +m[3], 8).getTime();
+    function tick() {
+      var left = Math.max(0, at - Date.now());
+      var v = { d: Math.floor(left / 864e5), h: Math.floor((left % 864e5) / 36e5), m: Math.floor((left % 36e5) / 6e4) };
+      all('[data-k]', el).forEach(function (b) { b.textContent = String(v[b.getAttribute('data-k')]).padStart(2, '0'); });
+    }
+    tick(); setInterval(tick, 30000);
+  });
+
+  // Forms send leads to the client's dashboard.
+  all('form[data-capture]').forEach(function (f) {
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var body = { client: f.getAttribute('data-client'), source: f.getAttribute('data-source'), form: f.getAttribute('data-form'), page: f.getAttribute('data-page') || location.pathname };
+      all('input[name]', f).forEach(function (i) { body[i.name] = i.value; });
+      var btn = f.querySelector('button[type=submit]'), note = f.querySelector('[data-note]');
+      var done = function () { var p = document.createElement('p'); p.className = f.getAttribute('data-thanks-class') || ''; p.textContent = f.getAttribute('data-thanks') || 'Thanks!'; f.innerHTML = ''; f.appendChild(p); };
+      var ep = f.getAttribute('data-endpoint');
+      if (!ep) { done(); return; }
+      if (btn) btn.disabled = true;
+      fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+        .then(function (r) { if (!r.ok) throw new Error(); done(); })
+        .catch(function () { if (btn) btn.disabled = false; if (note) note.textContent = 'That did not go through. Please try again.'; });
+    });
+  });
+})();
+
+</script>
+</body>
+</html>
